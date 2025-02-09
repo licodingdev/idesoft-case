@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IdeaSoft API Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <style>
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: #fafafa;
+        }
+        .code-font {
+            font-family: 'Source Code Pro', monospace;
+        }
+        .method {
+            font-size: 0.85em;
+            min-width: 80px;
+            padding: 6px 15px;
+            text-align: center;
+            border-radius: 3px;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+            font-family: 'Source Code Pro', monospace;
+            font-weight: 600;
+        }
+        .method-get {
+            background: #61affe;
+            color: #fff;
+        }
+        .method-post {
+            background: #49cc90;
+            color: #fff;
+        }
+        .method-delete {
+            background: #f93e3e;
+            color: #fff;
+        }
+        .endpoint {
+            border: 1px solid #e4e4e4;
+            background: #fff;
+        }
+        .endpoint:hover {
+            background: #f8f9fa;
+        }
+        .response-container {
+            background: #263238;
+            color: #fff;
+        }
+        .response-container pre {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.85em;
+        }
+        .status-code {
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.85em;
+        }
+        .status-success {
+            background-color: #49cc90;
+            color: white;
+        }
+        .status-error {
+            background-color: #f93e3e;
+            color: white;
+        }
+        
+        .curl-section {
+            @apply bg-[#1a1b26] border border-[#2f334d] rounded-xl p-6 mb-6;
+        }
+        
+        .curl-title {
+            @apply flex items-center space-x-3 mb-4;
+        }
+        
+        .method-label {
+            @apply px-3 py-1 rounded-md text-sm font-mono font-semibold;
+        }
+        
+        .get { @apply bg-blue-500/20 text-blue-400 border border-blue-500/30; }
+        .post { @apply bg-emerald-500/20 text-emerald-400 border border-emerald-500/30; }
+        .delete { @apply bg-rose-500/20 text-rose-400 border border-rose-500/30; }
+        
+        .endpoint-path {
+            @apply text-gray-300 font-mono text-sm;
+        }
+        
+        .code-block {
+            @apply bg-[#1f2335] rounded-lg overflow-hidden mt-3;
+        }
+        
+        .code-block pre {
+            @apply m-0 p-4;
+        }
+        
+        .code-block code {
+            @apply font-mono text-sm leading-relaxed;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+   
+    <header class="bg-[#1b1b1b] text-white py-4">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">IdeaSoft API</h1>
+                <div class="text-sm">
+                    <span class="bg-green-500 px-2 py-1 rounded">v1.0.0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8">
+       
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-2">API Documentation</h2>
+            <p class="text-gray-600">Base URL: <code class="bg-gray-100 px-2 py-1 rounded code-font">http://localhost:8080</code></p>
+        </div>
+
+       
+        <div class="mb-12">
+            <h3 class="text-xl font-bold mb-4 text-gray-800">Orders</h3>
+            
+          
+            <div class="endpoint mb-4">
+                <div class="flex items-start p-4 cursor-pointer" onclick="toggleEndpoint('listOrders')">
+                    <span class="method method-get mr-4">GET</span>
+                    <div class="flex-1">
+                        <div class="code-font text-base mb-1">/orders</div>
+                        <div class="text-sm text-gray-600">Returns a list of all orders</div>
+                    </div>
+                </div>
+                <div id="listOrders" class="hidden px-4 pb-4">
+                    <div class="pl-[100px]">
+                        <div class="mb-4">
+                            <h4 class="text-sm font-bold mb-2">Responses</h4>
+                            <div class="text-sm">
+                                <div class="flex items-center mb-1">
+                                    <span class="text-green-600 w-16">200</span>
+                                    <span>Successful response</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="text-red-600 w-16">404</span>
+                                    <span>Not found</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="listOrders()" class="bg-[#4990e2] text-white px-4 py-2 rounded text-sm hover:bg-[#357abd] transition-colors">
+                            Try it out
+                        </button>
+                        <div id="listOrdersResponse" class="hidden mt-4 response-container rounded-md overflow-hidden">
+                            <div class="bg-[#1b1b1b] px-4 py-2 text-sm flex justify-between items-center">
+                                <span>Response</span>
+                                <span class="status-code"></span>
+                            </div>
+                            <pre class="p-4 overflow-x-auto"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="endpoint mb-4">
+                <div class="flex items-start p-4 cursor-pointer" onclick="toggleEndpoint('createOrder')">
+                    <span class="method method-post mr-4">POST</span>
+                    <div class="flex-1">
+                        <div class="code-font text-base mb-1">/orders</div>
+                        <div class="text-sm text-gray-600">Create a new order</div>
+                    </div>
+                </div>
+                <div id="createOrder" class="hidden px-4 pb-4">
+                    <div class="pl-[100px]">
+                        <div class="mb-4">
+                            <h4 class="text-sm font-bold mb-2">Request Body</h4>
+                            <textarea id="createOrderPayload" rows="8" class="w-full p-4 bg-[#263238] text-white rounded code-font text-sm">{
+    "customerId": 1,
+    "items": [
+        {
+            "productId": 102,
+            "quantity": 6,
+            "unitPrice": 11.28
+        }
+    ]
+}</textarea>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="text-sm font-bold mb-2">Responses</h4>
+                            <div class="text-sm">
+                                <div class="flex items-center mb-1">
+                                    <span class="text-green-600 w-16">201</span>
+                                    <span>Order created</span>
+                                </div>
+                                <div class="flex items-center mb-1">
+                                    <span class="text-red-600 w-16">400</span>
+                                    <span>Invalid input</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="createOrder()" class="bg-[#4990e2] text-white px-4 py-2 rounded text-sm hover:bg-[#357abd] transition-colors">
+                            Try it out
+                        </button>
+                        <div id="createOrderResponse" class="hidden mt-4 response-container rounded-md overflow-hidden">
+                            <div class="bg-[#1b1b1b] px-4 py-2 text-sm flex justify-between items-center">
+                                <span>Response</span>
+                                <span class="status-code"></span>
+                            </div>
+                            <pre class="p-4 overflow-x-auto"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+           
+            <div class="endpoint mb-4">
+                <div class="flex items-start p-4 cursor-pointer" onclick="toggleEndpoint('deleteOrder')">
+                    <span class="method method-delete mr-4">DELETE</span>
+                    <div class="flex-1">
+                        <div class="code-font text-base mb-1">/orders/{id}</div>
+                        <div class="text-sm text-gray-600">Delete an order by ID</div>
+                    </div>
+                </div>
+                <div id="deleteOrder" class="hidden px-4 pb-4">
+                    <div class="pl-[100px]">
+                        <div class="mb-4">
+                            <h4 class="text-sm font-bold mb-2">Parameters</h4>
+                            <div class="flex items-center">
+                                <span class="w-20 text-sm">Order ID</span>
+                                <input type="number" id="deleteOrderId" class="flex-1 p-2 border rounded code-font" placeholder="Enter Order ID">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="text-sm font-bold mb-2">Responses</h4>
+                            <div class="text-sm">
+                                <div class="flex items-center mb-1">
+                                    <span class="text-green-600 w-16">204</span>
+                                    <span>Order deleted</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="text-red-600 w-16">404</span>
+                                    <span>Order not found</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="deleteOrder()" class="bg-[#4990e2] text-white px-4 py-2 rounded text-sm hover:bg-[#357abd] transition-colors">
+                            Try it out
+                        </button>
+                        <div id="deleteOrderResponse" class="hidden mt-4 response-container rounded-md overflow-hidden">
+                            <div class="bg-[#1b1b1b] px-4 py-2 text-sm flex justify-between items-center">
+                                <span>Response</span>
+                                <span class="status-code"></span>
+                            </div>
+                            <pre class="p-4 overflow-x-auto"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+      
+        <div class="mb-12">
+            <h3 class="text-xl font-bold mb-4 text-gray-800">Discounts</h3>
+            
+           
+            <div class="endpoint mb-4">
+                <div class="flex items-start p-4 cursor-pointer" onclick="toggleEndpoint('calculateDiscounts')">
+                    <span class="method method-get mr-4">GET</span>
+                    <div class="flex-1">
+                        <div class="code-font text-base mb-1">/orders/{id}/discounts</div>
+                        <div class="text-sm text-gray-600">Calculate discounts for an order</div>
+                    </div>
+                </div>
+                <div id="calculateDiscounts" class="hidden px-4 pb-4">
+                    <div class="pl-[100px]">
+                        <div class="mb-4">
+                            <h4 class="text-sm font-bold mb-2">Parameters</h4>
+                            <div class="flex items-center">
+                                <span class="w-20 text-sm">Order ID</span>
+                                <input type="number" id="discountOrderId" class="flex-1 p-2 border rounded code-font" placeholder="Enter Order ID">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h4 class="text-sm font-bold mb-2">Responses</h4>
+                            <div class="text-sm">
+                                <div class="flex items-center mb-1">
+                                    <span class="text-green-600 w-16">200</span>
+                                    <span>Successful response</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="text-red-600 w-16">404</span>
+                                    <span>Order not found</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="calculateDiscounts()" class="bg-[#4990e2] text-white px-4 py-2 rounded text-sm hover:bg-[#357abd] transition-colors">
+                            Try it out
+                        </button>
+                        <div id="calculateDiscountsResponse" class="hidden mt-4 response-container rounded-md overflow-hidden">
+                            <div class="bg-[#1b1b1b] px-4 py-2 text-sm flex justify-between items-center">
+                                <span>Response</span>
+                                <span class="status-code"></span>
+                            </div>
+                            <pre class="p-4 overflow-x-auto"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-xl font-bold mb-6 text-gray-800">cURL Examples</h2>
+        
+        <!-- List Orders -->
+        <div class="mb-6">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm font-semibold">GET</span>
+                <code class="text-gray-600 text-sm">/orders</code>
+            </div>
+            <div class="bg-[#1A1B26] rounded-lg overflow-hidden">
+                <pre class="m-0 p-4"><code class="text-sm">curl -X GET http://localhost:8080/orders</code></pre>
+            </div>
+        </div>
+
+        <!-- Create Order -->
+        <div class="mb-6">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-sm font-semibold">POST</span>
+                <code class="text-gray-600 text-sm">/orders</code>
+            </div>
+            <div class="bg-[#1A1B26] rounded-lg overflow-hidden">
+                <pre class="m-0 p-4"><code class="text-sm">curl -X POST http://localhost:8080/orders \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customerId": 1,
+    "items": [
+      {
+        "productId": 100,
+        "quantity": 10,
+        "unitPrice": 120.75
+      }
+    ]
+  }'</code></pre>
+            </div>
+        </div>
+
+        <!-- Delete Order -->
+        <div class="mb-6">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-sm font-semibold">DELETE</span>
+                <code class="text-gray-600 text-sm">/orders/{id}</code>
+            </div>
+            <div class="bg-[#1A1B26] rounded-lg overflow-hidden">
+                <pre class="m-0 p-4"><code class="text-sm">curl -X DELETE http://localhost:8080/orders/1</code></pre>
+            </div>
+        </div>
+
+        <!-- Calculate Discounts -->
+        <div class="mb-6">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm font-semibold">GET</span>
+                <code class="text-gray-600 text-sm">/orders/{id}/discounts</code>
+            </div>
+            <div class="bg-[#1A1B26] rounded-lg overflow-hidden">
+                <pre class="m-0 p-4"><code class="text-sm">curl -X GET http://localhost:8080/orders/1/discounts</code></pre>
+            </div>
+        </div>
+
+        <!-- Example Responses -->
+        <h2 class="text-xl font-bold mt-12 mb-6 text-gray-800">Example Responses</h2>
+        
+        <!-- Success Response -->
+        <div class="mb-6">
+            <div class="text-sm font-medium text-gray-600 mb-2">Create Order Response</div>
+            <div class="bg-[#1A1B26] rounded-lg overflow-hidden">
+                <pre class="m-0 p-4"><code class="text-sm">{
+  "id": "1"
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Discount Response -->
+        <div class="mb-6">
+            <div class="text-sm font-medium text-gray-600 mb-2">Discount Calculation Response</div>
+            <div class="bg-[#1A1B26] rounded-lg overflow-hidden">
+                <pre class="m-0 p-4"><code class="text-sm">{
+  "orderId": "1",
+  "discounts": [
+    {
+      "discountReason": "10_PERCENT_OVER_1000",
+      "discountAmount": "108.68",
+      "subtotal": "978.08"
+    }
+  ],
+  "totalDiscount": "108.68",
+  "discountedTotal": "978.08"
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- Error Response -->
+        <div class="mb-6">
+            <div class="text-sm font-medium text-gray-600 mb-2">Error Response</div>
+            <div class="bg-[#1A1B26] rounded-lg overflow-hidden">
+                <pre class="m-0 p-4"><code class="text-sm">{
+  "error": "Invalid item data at index 0. Missing required field: productId"
+}</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const baseUrl = 'http://localhost:8080';
+
+        function toggleEndpoint(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('hidden');
+        }
+
+        function updateResponse(elementId, response, isError = false) {
+            const container = document.getElementById(elementId);
+            container.classList.remove('hidden');
+            
+            const statusElement = container.querySelector('.status-code');
+            const status = response.status || 500;
+            statusElement.textContent = `Status: ${status}`;
+            statusElement.className = 'status-code ' + (status < 400 ? 'status-success' : 'status-error');
+            
+            let displayData = response.data;
+            container.querySelector('pre').textContent = JSON.stringify(displayData, null, 2);
+        }
+
+        async function listOrders() {
+            try {
+                const response = await axios.get(`${baseUrl}/orders`);
+                updateResponse('listOrdersResponse', response);
+            } catch (error) {
+                if (error.response) {
+                    updateResponse('listOrdersResponse', error.response, true);
+                } else if (error.request) {
+                    updateResponse('listOrdersResponse', {
+                        status: 503,
+                        data: { error: 'API is not accessible' }
+                    }, true);
+                } else {
+                    updateResponse('listOrdersResponse', {
+                        status: 500,
+                        data: { error: error.message }
+                    }, true);
+                }
+            }
+        }
+
+        async function createOrder() {
+            try {
+                const payload = JSON.parse(document.getElementById('createOrderPayload').value);
+                const response = await axios.post(`${baseUrl}/orders`, payload);
+                updateResponse('createOrderResponse', response);
+            } catch (error) {
+                if (error.name === 'SyntaxError') {
+                    updateResponse('createOrderResponse', {
+                        status: 400,
+                        data: { error: 'Invalid JSON payload' }
+                    }, true);
+                } else if (error.response) {
+                    updateResponse('createOrderResponse', error.response, true);
+                } else if (error.request) {
+                    updateResponse('createOrderResponse', {
+                        status: 503,
+                        data: { error: 'API is not accessible' }
+                    }, true);
+                } else {
+                    updateResponse('createOrderResponse', {
+                        status: 500,
+                        data: { error: error.message }
+                    }, true);
+                }
+            }
+        }
+
+        async function deleteOrder() {
+            try {
+                const orderId = document.getElementById('deleteOrderId').value;
+                const response = await axios.delete(`${baseUrl}/orders/${orderId}`);
+                updateResponse('deleteOrderResponse', response);
+            } catch (error) {
+                if (error.response) {
+                    updateResponse('deleteOrderResponse', error.response, true);
+                } else if (error.request) {
+                    updateResponse('deleteOrderResponse', {
+                        status: 503,
+                        data: { error: 'API is not accessible' }
+                    }, true);
+                } else {
+                    updateResponse('deleteOrderResponse', {
+                        status: 500,
+                        data: { error: error.message }
+                    }, true);
+                }
+            }
+        }
+
+        async function calculateDiscounts() {
+            try {
+                const orderId = document.getElementById('discountOrderId').value;
+                const response = await axios.get(`${baseUrl}/orders/${orderId}/discounts`);
+                updateResponse('calculateDiscountsResponse', response);
+            } catch (error) {
+                if (error.response) {
+                    updateResponse('calculateDiscountsResponse', error.response, true);
+                } else if (error.request) {
+                    updateResponse('calculateDiscountsResponse', {
+                        status: 503,
+                        data: { error: 'API is not accessible' }
+                    }, true);
+                } else {
+                    updateResponse('calculateDiscountsResponse', {
+                        status: 500,
+                        data: { error: error.message }
+                    }, true);
+                }
+            }
+        }
+    </script>
+    <script>
+        // Highlight.js başlatma
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightBlock(block);
+            });
+        });
+    </script>
+</body>
+</html>
